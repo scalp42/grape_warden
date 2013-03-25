@@ -43,5 +43,24 @@ describe GWAR::API do
     end
   end
 
+  context "full_cycle" do
+    it "info" do
+      get "/info"
+      last_response.status.should == 401
+      last_response.body.should == { error: "Unauthorized" }.to_json
+
+      post "/login", { "username" => "Susan" }
+
+      get "/info"
+      last_response.status.should == 200
+      last_response.body.should == { "username" => "Susan" }.to_json
+
+      post "/logout"
+
+      get "/info"
+      last_response.status.should == 401
+      last_response.body.should == { error: "Unauthorized" }.to_json      
+    end
+  end
 end
 

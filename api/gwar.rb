@@ -28,5 +28,10 @@ module GWAR
       { "username" => env['warden'].user.name }
     end
     
+    post 'logout' do
+      env['warden'].logout
+      { "status" => "ok" }
+    end
+
   end
 end
