@@ -43,8 +43,8 @@ describe GWAR::API do
     end
   end
 
-  context "full_cycle" do
-    it "info" do
+  context "full_cycle_authentication" do
+    it "full_cycle" do
       get "/info"
       last_response.status.should == 401
       last_response.body.should == { error: "Unauthorized" }.to_json
