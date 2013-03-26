@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe GWAR::API do
+describe GrapeWarden::API do
   include Rack::Test::Methods
 
   def app
-    GWAR::API
+    GrapeWarden::API
   end
     
   it "ping" do
@@ -30,6 +30,12 @@ describe GWAR::API do
       last_response.status.should == 401
       last_response.body.should == { error: "Invalid username or password" }.to_json
     end
+
+    it "logged out" do
+      post "/logout"
+      last_response.status.should == 401
+      last_response.body.should == { error: "Logged out" }.to_json      
+    end
   end
 
   context "authenticated" do
@@ -43,24 +49,24 @@ describe GWAR::API do
     end
   end
 
-  context "full_cycle_authentication" do
-    it "full_cycle" do
-      get "/info"
-      last_response.status.should == 401
-      last_response.body.should == { error: "Unauthorized" }.to_json
+  it "full cycle test" do
+    get "/info"
+    last_response.status.should == 401
+    last_response.body.should == { error: "Unauthorized" }.to_json
 
-      post "/login", { "username" => "Susan" }
+    post "/login", { "username" => "Susan" }
+    last_response.status.should == 201
 
-      get "/info"
-      last_response.status.should == 200
-      last_response.body.should == { "username" => "Susan" }.to_json
+    get "/info"
+    last_response.status.should == 200
+    last_response.body.should == { "username" => "Susan" }.to_json
 
-      post "/logout"
+    post "/logout"
+    last_response.status.should == 201
 
-      get "/info"
-      last_response.status.should == 401
-      last_response.body.should == { error: "Unauthorized" }.to_json      
-    end
+    get "/info"
+    last_response.status.should == 401
+    last_response.body.should == { error: "Unauthorized" }.to_json      
   end
 end
 

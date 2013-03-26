@@ -1,4 +1,4 @@
-module GWAR
+module GrapeWarden
   class User
 
     USERS = {

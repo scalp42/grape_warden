@@ -1,13 +1,13 @@
 require 'user'
 
-module GWAR
+module GrapeWarden
   class API < Grape::API
 
     use Rack::Session::Cookie, :secret => "replace this with some secret key"
 
     use Warden::Manager do |manager|
       manager.default_strategies :password
-      manager.failure_app = GWAR::API
+      manager.failure_app = GrapeWarden::API
     end
     
     format :json
@@ -29,6 +29,9 @@ module GWAR
     end
     
     post 'logout' do
+      env['warden'].authenticate
+      error! "Logged out", 401 unless env['warden'].user
+
       env['warden'].logout
       { "status" => "ok" }
     end

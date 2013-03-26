@@ -1,5 +1,5 @@
 Warden::Manager.serialize_into_session { |user| user.id }
-Warden::Manager.serialize_from_session { |id| GWAR::User.get(id) }
+Warden::Manager.serialize_from_session { |id| GrapeWarden::User.get(id) }
 
 Warden::Strategies.add(:password) do
 
@@ -8,7 +8,7 @@ Warden::Strategies.add(:password) do
   end
 
   def authenticate!
-    u = GWAR::User.authenticate(params['username'], params['password'])
+    u = GrapeWarden::User.authenticate(params['username'], params['password'])
     u.nil? ? fail!("Could not log in") : success!(u)
   end
 end
